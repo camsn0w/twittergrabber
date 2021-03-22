@@ -1,13 +1,6 @@
-package datagrabber
-
+package twittergrabber
 
 type Entry struct {
-	Date string
+	Date  string
 	Score float32
 }
-
-
-
-
-
-

@@ -1,4 +1,4 @@
-package datagrabber
+package twittergrabber
 
 type QueryInfo struct {
 	QueryStr string
@@ -9,13 +9,11 @@ type MarketWatcher interface {
 	Query() error
 
 	MarketWorker() MarketWorker
-
 }
 type WorkerList []MarketWorker
 type MarketWorker struct {
-	QInfo   QueryInfo
-	Data Entry
-
+	QInfo QueryInfo
+	Data  Entry
 }
 
 type Many struct {
@@ -40,15 +38,17 @@ func (workers *WorkerList) Upload(db string, collect string) {
 	var data []Entry
 	for _, worker := range *workers {
 
-		data = append(data,worker.Data)
+		data = append(data, worker.Data)
 
 	}
-	_, err  := collection.InsertOne(ctx,data)
+	_, err := collection.InsertOne(ctx, data)
 	if err != nil {
-		println(err.Error())
+		println("Meep")
+		println(err.Error()) //TODO: Fix this error!!
 	}
-/*	_, _ = collection.InsertOne(ctx, data)
-*/}
+	/*	_, _ = collection.InsertOne(ctx, data)
+	 */
+}
 
 /*type connection struct {
 	m MarketWatcher

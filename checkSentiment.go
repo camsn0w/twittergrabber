@@ -1,4 +1,4 @@
-package datagrabber
+package twittergrabber
 
 import (
 	"github.com/cdipaolo/sentiment"
@@ -25,5 +25,5 @@ func ProcessBatch(data TweetData) float32 {
 			int(processData(val.Text))
 	}
 
-	return float32(score)/float32(len(data.Data))
+	return float32(score) / float32(len(data.Data))
 }
