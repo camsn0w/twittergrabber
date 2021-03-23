@@ -18,6 +18,7 @@ func getClient() *mongo.Client {
 		"mongodb+srv://admin:smalltoast20@cluster0.ubr9l.mongodb.net/<dbname>?retryWrites=true&w=majority",
 	))
 	if err != nil {
+		println("Cannot create client")
 		log.Fatal(err)
 	}
 	return client

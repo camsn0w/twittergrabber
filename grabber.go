@@ -1,23 +1,26 @@
 package twittergrabber
 
-type QueryInfo struct {
-	QueryStr string
-	Amount   int
-	Days     int
-}
 type MarketWatcher interface {
 	Query() error
 
 	MarketWorker() MarketWorker
 }
-type WorkerList []MarketWorker
-type MarketWorker struct {
-	QInfo QueryInfo
-	Data  Entry
+
+type Data struct {
+	message   string
+	id        string
+	timestamp int64
+	score     uint8
 }
 
-type Many struct {
-	list []Entry
+type WorkerList []MarketWorker
+type MarketWorker struct {
+	ticker string
+	data   []Data
+}
+
+func NewTwitterWorker(ticker string) *MarketWorker {
+	return &MarketWorker{ticker: ticker, data: GetTweetData(ticker)}
 }
 
 /*func NewWorker(w MarketWatcher, info QueryInfo) *MarketWorker {
@@ -35,13 +38,12 @@ func (workers *WorkerList) Upload(db string, collect string) {
 	))
 	if err != nil { log.Fatal(err) }*/
 	collection := getClient().Database(db).Collection(collect)
-	var data []Entry
+	var dataPoints []Data
 	for _, worker := range *workers {
-
-		data = append(data, worker.Data)
+		dataPoints = append(dataPoints, worker.data...)
 
 	}
-	_, err := collection.InsertOne(ctx, data)
+	_, err := collection.InsertOne(ctx, dataPoints)
 	if err != nil {
 		println("Meep")
 		println(err.Error()) //TODO: Fix this error!!

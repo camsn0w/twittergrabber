@@ -2,17 +2,18 @@ package twittergrabber
 
 import (
 	"github.com/cdipaolo/sentiment"
-	"os"
 )
 
 var model sentiment.Models
 
 func processData(text string) uint8 {
+	return 0
+	/*println("Text: ", text)
 	analysis := model.SentimentAnalysis(text, sentiment.English)
-	return analysis.Score
+	return analysis.Score*/
 }
 
-func ProcessBatch(data TweetData) float32 {
+/*func ProcessBatch(data TweetData) float32 {
 	currModel, err := sentiment.Restore()
 	if err != nil {
 		print(err)
@@ -27,3 +28,4 @@ func ProcessBatch(data TweetData) float32 {
 
 	return float32(score) / float32(len(data.Data))
 }
+*/
