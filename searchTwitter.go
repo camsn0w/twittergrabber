@@ -3,7 +3,6 @@ package twittergrabber
 import (
 	"context"
 	twitterscraper "github.com/n0madic/twitter-scraper"
-	"sync"
 )
 
 type condensedTweet struct {
@@ -20,9 +19,8 @@ func scrape(token string) []Data {
 	ctx := context.Background()
 	scraper := twitterscraper.New()
 	scraper.SetSearchMode(twitterscraper.SearchLatest)
-	result := scraper.SearchTweets(ctx, token, 10)
-	dataChan := make(chan Data)
-	var wg sync.WaitGroup
+	result := scraper.SearchTweets(ctx, token+" lang:en", 1000)
+	var tweetData []Data
 	for tweet := range result {
 		if tweet.Error != nil {
 			continue
@@ -32,31 +30,19 @@ func scrape(token string) []Data {
 			Text:      tweet.Text,
 			Timestamp: tweet.Timestamp,
 		}
-		wg.Add(1)
-		processTweet(&reducedTweet, &wg, dataChan)
-
+		tweetData = append(tweetData, *processTweet(&reducedTweet))
 	}
-	wg.Wait()
-
-	return unpackChannel(dataChan)
+	return tweetData
 }
 
-func unpackChannel(result <-chan Data) []Data {
-	var out []Data
-	for val := range result {
-		out = append(out, val)
-	}
-	return out
-}
-
-func processTweet(tweet *condensedTweet, wg *sync.WaitGroup, results chan<- Data) {
-	defer wg.Done()
-	results <- Data{
+func processTweet(tweet *condensedTweet) *Data {
+	return &Data{
 		message:   tweet.Text,
 		id:        tweet.ID,
 		timestamp: tweet.Timestamp,
 		score:     tweet.getTwitScore(),
 	}
+
 }
 
 func (tweet *condensedTweet) getTwitScore() uint8 {
