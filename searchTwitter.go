@@ -11,10 +11,6 @@ type condensedTweet struct {
 	Timestamp int64
 }
 
-func GetTweetData(query string) []Data {
-	return scrape(query)
-}
-
 func scrape(token string) []Data {
 	ctx := context.Background()
 	scraper := twitterscraper.New()
@@ -23,6 +19,7 @@ func scrape(token string) []Data {
 	var tweetData []Data
 	for tweet := range result {
 		if tweet.Error != nil {
+			println(tweet.Error)
 			continue
 		}
 		reducedTweet := condensedTweet{
@@ -37,10 +34,10 @@ func scrape(token string) []Data {
 
 func processTweet(tweet *condensedTweet) *Data {
 	return &Data{
-		message:   tweet.Text,
-		id:        tweet.ID,
-		timestamp: tweet.Timestamp,
-		score:     tweet.getTwitScore(),
+		Message:   tweet.Text,
+		Id:        tweet.ID,
+		Timestamp: tweet.Timestamp,
+		Score:     tweet.getTwitScore(),
 	}
 
 }

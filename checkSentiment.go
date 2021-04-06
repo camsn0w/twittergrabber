@@ -4,13 +4,10 @@ import (
 	"github.com/cdipaolo/sentiment"
 )
 
-var model sentiment.Models
+var model, _ = sentiment.Restore()
 
-func processData(text string) uint8 {
-	return 0
-	/*println("Text: ", text)
-	analysis := model.SentimentAnalysis(text, sentiment.English)
-	return analysis.Score*/
+func processData(text string) uint8 { //TODO: Fix this massive bottleneck
+	return model.SentimentAnalysis(text, sentiment.English).Score
 }
 
 /*func ProcessBatch(data TweetData) float32 {
